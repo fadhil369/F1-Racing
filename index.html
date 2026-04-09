@@ -2,25 +2,40 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Critical: prevent zoom, fix viewport on all phones -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="theme-color" content="#000000" />
     <title>Ultra F1 Racing | Monza Circuit</title>
-    <meta name="description" content="High-performance F1 racing game. Master the Monza circuit and outdrve the AI." />
+    <meta name="description" content="High-performance F1 racing game. Master the Monza circuit and outperform the AI." />
     <link rel="stylesheet" href="./src/style.css">
   </head>
   <body>
+    <!-- Start Menu -->
     <div id="start-menu">
-      <h1>Ultra F1 Racing</h1>
-      <p>Master the Monza Circuit. Outperform the AI.</p>
-      <button id="start-button">Start Race</button>
-      <div id="controls-hint">WASD / ARROWS to Drive | SPACE to Brake</div>
+      <div class="menu-content">
+        <h1>Ultra F1 Racing</h1>
+        <p>Master the Monza Circuit. Outperform the AI.</p>
+        <button id="start-button">Start Race</button>
+        <div id="controls-hint">
+          <span class="desktop-hint">WASD / ARROWS to Drive &nbsp;|&nbsp; SPACE to Brake</span>
+          <span class="mobile-hint">Use buttons below to drive</span>
+        </div>
+      </div>
     </div>
-    
-    <!-- Mobile Controls Overlay (Hidden by default) -->
-    <div id="mobile-controls" style="display: none;">
-      <div id="ctrl-left" class="joy-btn">←</div>
-      <div id="ctrl-right" class="joy-btn">→</div>
-      <div id="ctrl-accel" class="joy-btn">ACCEL</div>
-      <div id="ctrl-brake" class="joy-btn">BRAKE</div>
+
+    <!-- Mobile Touch Controls (shown after race starts on mobile) -->
+    <div id="mobile-controls">
+      <div class="ctrl-row ctrl-row-steer">
+        <div id="ctrl-left" class="joy-btn">◀</div>
+        <div id="ctrl-right" class="joy-btn">▶</div>
+      </div>
+      <div class="ctrl-row ctrl-row-action">
+        <div id="ctrl-accel" class="joy-btn accel-btn">▲<br/><span>GAS</span></div>
+        <div id="ctrl-brake" class="joy-btn brake-btn">■<br/><span>BRAKE</span></div>
+      </div>
     </div>
 
     <div id="app"></div>

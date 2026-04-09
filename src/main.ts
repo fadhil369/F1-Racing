@@ -35,15 +35,21 @@ class Game {
     this.camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
 
     this.renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+    // Resize canvas to match display size
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     
-    // Mobile optimization: Cap pixel ratio at 2.0 to prevent lag on high-DPI phones
-    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-    const pixelRatio = isMobile ? Math.min(window.devicePixelRatio, 2.0) : window.devicePixelRatio;
+    // Mobile optimization: cap pixel ratio, prefer high-performance GPU
+    const isMobile = this.isMobileDevice();
+    const pixelRatio = isMobile ? Math.min(window.devicePixelRatio, 1.5) : Math.min(window.devicePixelRatio, 2);
     this.renderer.setPixelRatio(pixelRatio);
-    this.renderer.shadowMap.enabled = true;
+    this.renderer.shadowMap.enabled = !isMobile; // Disable shadows on mobile for perf
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     document.getElementById('app')?.appendChild(this.renderer.domElement);
+    
+    // Prevent default touch behaviors on canvas
+    this.renderer.domElement.addEventListener('touchstart', (e) => e.preventDefault(), { passive: false });
+    this.renderer.domElement.addEventListener('touchmove',  (e) => e.preventDefault(), { passive: false });
+    this.renderer.domElement.setAttribute('tabindex', '0');
 
     // Physics settings for better mobile & desktop stability
     this.physicsWorld = new CANNON.World({
@@ -108,45 +114,51 @@ class Game {
     // Initialize SoundManager
     this.soundManager = new SoundManager(this.camera, this.car.visualBody);
     
-    // Start Button Logic
+    // Start Button
     const startBtn = document.getElementById('start-button');
     startBtn?.addEventListener('click', () => {
         this.gameStarted = true;
-        this.lastTime = performance.now(); // Reset timer to prevent physics stall
+        this.lastTime = performance.now();
         this.soundManager.resume();
         
-        // Ensure browser captures keyboard focus
         window.focus();
         this.renderer.domElement.focus();
 
         document.getElementById('start-menu')!.style.display = 'none';
         
-        // Only show mobile controls if we are on a mobile device
-        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-        if (isMobile) {
-            document.getElementById('mobile-controls')!.style.display = 'grid';
+        // Show mobile controls on touch devices
+        if (this.isMobileDevice() || window.matchMedia('(pointer: coarse)').matches) {
+            const ctrl = document.getElementById('mobile-controls')!;
+            ctrl.classList.add('active');
         }
     });
 
     window.addEventListener('resize', this.onWindowResize.bind(this));
+    // Handle phone orientation changes
+    window.addEventListener('orientationchange', () => {
+        setTimeout(() => this.onWindowResize(), 300);
+    });
 
     this.animate();
+  }
+
+  private isMobileDevice(): boolean {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
   }
 
   private setupMobileControls() {
      const register = (id: string, action: (val: boolean) => void) => {
         const el = document.getElementById(id);
         if (!el) return;
-        const handle = (e: Event, val: boolean) => {
-           e.preventDefault();
-           action(val);
-        };
-        el.addEventListener('pointerdown', (e) => handle(e, true));
-        el.addEventListener('pointerup', (e) => handle(e, false));
-        el.addEventListener('pointerleave', (e) => handle(e, false));
+        const on  = (e: Event) => { e.preventDefault(); action(true);  el.classList.add('pressed'); };
+        const off = (e: Event) => { e.preventDefault(); action(false); el.classList.remove('pressed'); };
+        el.addEventListener('pointerdown',  on);
+        el.addEventListener('pointerup',    off);
+        el.addEventListener('pointerleave', off);
+        el.addEventListener('pointercancel',off);
      };
 
-     register('ctrl-left', (v) => this.input.setLeft(v));
+     register('ctrl-left',  (v) => this.input.setLeft(v));
      register('ctrl-right', (v) => this.input.setRight(v));
      register('ctrl-accel', (v) => this.input.setForward(v));
      register('ctrl-brake', (v) => this.input.setBrake(v));
@@ -220,10 +232,12 @@ class Game {
   }
 
   private onWindowResize() {
-    this.camera.aspect = window.innerWidth / window.innerHeight;
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    this.camera.aspect = w / h;
     this.camera.updateProjectionMatrix();
-    this.renderer.setSize(window.innerWidth, window.innerHeight);
-    this.postProcess.setSize(window.innerWidth, window.innerHeight);
+    this.renderer.setSize(w, h);
+    this.postProcess.setSize(w, h);
   }
 
   private animate() {
