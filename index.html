@@ -2,40 +2,37 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <!-- Critical: prevent zoom, fix viewport on all phones -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-    <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="theme-color" content="#000000" />
-    <title>Ultra F1 Racing | Monza Circuit</title>
-    <meta name="description" content="High-performance F1 racing game. Master the Monza circuit and outperform the AI." />
-    <script type="module" crossorigin src="/F1-Racing/assets/index-ekuO-4wZ.js"></script>
-    <link rel="stylesheet" crossorigin href="/F1-Racing/assets/index-CDGoQqDf.css">
+    <title>Ultra F1 Racing | Console Fixed</title>
+    <script type="module" crossorigin src="/F1-Racing/assets/index-CPyITiyo.js"></script>
+    <link rel="stylesheet" crossorigin href="/F1-Racing/assets/index-jMHFV9bD.css">
   </head>
   <body>
     <!-- Start Menu -->
     <div id="start-menu">
       <div class="menu-content">
         <h1>Ultra F1 Racing</h1>
-        <p>Master the Monza Circuit. Outperform the AI.</p>
-        <button id="start-button">Start Race</button>
-        <div id="controls-hint">
-          <span class="desktop-hint">WASD / ARROWS to Drive &nbsp;|&nbsp; SPACE to Brake</span>
-          <span class="mobile-hint">Use buttons below to drive</span>
-        </div>
+        <p>Testing Phase: Debug Block Car</p>
+        <button id="start-button">START RACE</button>
       </div>
     </div>
 
-    <!-- Mobile Touch Controls (shown after race starts on mobile) -->
+    <!-- Debug HUD -->
+    <div id="debug-hud">
+       FPS: <span id="fps-val">0</span><br/>
+       POS: <span id="pos-val">0, 0, 0</span><br/>
+       INPUT: <span id="input-val">NONE</span>
+    </div>
+
+    <!-- Mobile Touch Controls -->
     <div id="mobile-controls">
-      <div class="ctrl-row ctrl-row-steer">
-        <div id="ctrl-left" class="joy-btn">◀</div>
-        <div id="ctrl-right" class="joy-btn">▶</div>
+      <div class="ctrl-group">
+        <div id="ctrl-left" class="joy-btn">◀<span>LEFT</span></div>
+        <div id="ctrl-right" class="joy-btn">▶<span>RIGHT</span></div>
       </div>
-      <div class="ctrl-row ctrl-row-action">
-        <div id="ctrl-accel" class="joy-btn accel-btn">▲<br/><span>GAS</span></div>
-        <div id="ctrl-brake" class="joy-btn brake-btn">■<br/><span>BRAKE</span></div>
+      <div class="ctrl-group">
+        <div id="ctrl-brake" class="joy-btn brake">■<span>BRAKE</span></div>
+        <div id="ctrl-accel" class="joy-btn accel">▲<span>GAS</span></div>
       </div>
     </div>
 
