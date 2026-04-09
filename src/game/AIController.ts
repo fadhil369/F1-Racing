@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { Car } from './Car';
 import { Track } from './Track';
+import { RaceManager } from './RaceManager';
 import { InputManager } from '../engine/Input'; // We'll mock input for AI
 
 export class AIController {

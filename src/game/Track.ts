@@ -74,7 +74,7 @@ export class Track {
         tex.wrapS = THREE.RepeatWrapping;
         tex.wrapT = THREE.RepeatWrapping;
         tex.repeat.set(5, 50);
-    }, undefined, (err) => {
+    }, undefined, () => {
         console.warn("Asphalt texture not found, using color fallback.");
     });
 
