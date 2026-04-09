@@ -20,6 +20,9 @@ export class Car {
     });
     this.chassisBody.addShape(new CANNON.Box(new CANNON.Vec3(0.9, 0.4, 2.5)));
     this.chassisBody.position.copy(startPos);
+    
+    // CRITICAL: Add the body to the world or it won't be simulated!
+    physicsWorld.addBody(this.chassisBody);
 
     // 3. Vehicle Setup
     this.vehicle = new CANNON.RaycastVehicle({

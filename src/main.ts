@@ -17,6 +17,9 @@ export class Game {
   
   private gameStarted = false;
   private lastTime = 0;
+  private fps = 0;
+  private frameCount = 0;
+  private lastFpsTime = 0;
   private isMobile: boolean;
 
   constructor() {
@@ -88,6 +91,7 @@ export class Game {
         this.soundManager.resume().catch(() => {});
         this.renderer.domElement.focus();
         this.onResize(); // Recalibrate on start
+        window.dispatchEvent(new Event('resize')); // Trigger events for safety
     });
 
     // Mobile Button Listeners
@@ -117,6 +121,9 @@ export class Game {
   }
 
   private updateHUD() {
+    const fpsVal = document.getElementById('fps-val');
+    if (fpsVal) fpsVal.textContent = Math.round(this.fps).toString();
+
     const pos = this.car.chassisBody.position;
     const posVal = document.getElementById('pos-val');
     if (posVal) posVal.textContent = `${pos.x.toFixed(1)}, ${pos.y.toFixed(1)}, ${pos.z.toFixed(1)}`;
@@ -144,6 +151,14 @@ export class Game {
     const now = performance.now();
     const dt = Math.min((now - this.lastTime) / 1000, 0.1);
     this.lastTime = now;
+
+    // Track FPS
+    this.frameCount++;
+    if (now - this.lastFpsTime > 1000) {
+        this.fps = (this.frameCount * 1000) / (now - this.lastFpsTime);
+        this.frameCount = 0;
+        this.lastFpsTime = now;
+    }
 
     // Phase 1: Input
     this.car.applyInput(this.input);
