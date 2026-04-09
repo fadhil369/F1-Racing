@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>High-Performance F1 Racing Game</title>
+    <link rel="stylesheet" href="/src/style.css">
+  </head>
+  <body>
+    <div id="start-menu">
+      <h1>Ultra F1 Racing</h1>
+      <p>Master the Monza Circuit. Outperform the AI.</p>
+      <button id="start-button">Start Race</button>
+      <div id="controls-hint">WASD / ARROWS to Drive | SPACE to Brake</div>
+    </div>
+    
+    <div id="game-ui" style="display: none;">
+      <div id="top-left">
+        <div id="pos-info">Pos 1/4</div>
+        <div id="lap-info">Lap 1/3</div>
+      </div>
+      <div id="bottom-right">
+        <canvas id="minimap"></canvas>
+        <div id="speedometer">0 km/h</div>
+      </div>
+
+      <!-- Mobile Controls Overlay -->
+      <div id="mobile-controls">
+        <div id="ctrl-left" class="joy-btn">←</div>
+        <div id="ctrl-right" class="joy-btn">→</div>
+        <div id="ctrl-accel" class="joy-btn">ACCEL</div>
+        <div id="ctrl-brake" class="joy-btn">BRAKE</div>
+      </div>
+    </div>
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

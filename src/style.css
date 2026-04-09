@@ -1,0 +1,201 @@
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  background-color: #242424;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  overflow: hidden;
+  width: 100vw;
+  height: 100vh;
+}
+
+#app {
+  width: 100%;
+  height: 100%;
+}
+
+#start-menu {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 100;
+  background: radial-gradient(circle, rgba(20,20,20,0.8) 0%, rgba(10,10,10,0.95) 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  text-align: center;
+  backdrop-filter: blur(10px);
+}
+
+#start-menu h1 {
+  font-size: 5rem;
+  font-weight: 900;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 5px;
+  background: linear-gradient(0deg, #ff2800, #ff8000);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 5px 15px rgba(255,40,0,0.3));
+}
+
+#start-menu p {
+  font-size: 1.2rem;
+  margin-bottom: 40px;
+  opacity: 0.8;
+  font-weight: 300;
+  max-width: 600px;
+}
+
+#start-button {
+  padding: 20px 60px;
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: white;
+  background: #ff2800;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  transition: all 0.2s ease;
+  box-shadow: 0 10px 30px rgba(255,40,0,0.4);
+}
+
+#start-button:hover {
+  background: #e62400;
+  transform: scale(1.05) translateY(-2px);
+  box-shadow: 0 15px 40px rgba(255,40,0,0.6);
+}
+
+#controls-hint {
+  margin-top: 40px;
+  font-size: 1rem;
+  opacity: 0.5;
+  letter-spacing: 1px;
+}
+
+#game-ui {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 10;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+#top-left {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+#pos-info, #lap-info {
+  font-size: 2rem;
+  font-weight: 800;
+  color: white;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 10px 20px;
+  border-left: 6px solid #ff2800;
+  font-style: italic;
+  width: fit-content;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+#bottom-right {
+  align-self: flex-end;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 20px;
+}
+
+#minimap {
+  width: 180px;
+  height: 180px;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%; /* Round minimap for premium look */
+  backdrop-filter: blur(10px);
+  box-shadow: 0 0 20px rgba(0,0,0,0.5);
+  overflow: hidden;
+}
+
+#speedometer {
+  font-size: 4rem;
+  font-weight: 900;
+  color: white;
+  text-shadow: 0 0 10px rgba(0,0,0,0.5);
+  font-style: italic;
+  background: linear-gradient(90deg, transparent, rgba(0,0,0,0.8));
+  padding: 10px 40px;
+  border-right: 8px solid #00f0ff;
+}
+
+#mobile-controls {
+  position: absolute;
+  bottom: 40px;
+  left: 40px;
+  right: 40px;
+  height: 180px;
+  display: none;
+  grid-template-areas: 
+    "left right . accel"
+    "left right . brake";
+  grid-template-columns: 90px 90px 1fr 140px;
+  grid-gap: 30px;
+  pointer-events: auto;
+}
+
+@media (pointer: coarse), (max-width: 768px) {
+  #mobile-controls {
+    display: grid;
+  }
+}
+
+.joy-btn {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-weight: 900;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+  font-size: 1.2rem;
+}
+
+.joy-btn:active {
+  background: rgba(255, 40, 0, 0.4);
+  border-color: #ff2800;
+}
+
+#ctrl-left { grid-area: left; }
+#ctrl-right { grid-area: right; }
+#ctrl-accel { grid-area: accel; font-size: 1.5rem; background: rgba(0, 255, 100, 0.2); }
+#ctrl-brake { grid-area: brake; background: rgba(255, 40, 0, 0.2); }
