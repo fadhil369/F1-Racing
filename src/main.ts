@@ -75,8 +75,9 @@ class Game {
     this.input = new InputManager();
     this.setupMobileControls();
 
-    // Spawn Player Car (Aligned with start line, facing +X)
-    this.car = new Car(this.scene, this.physicsWorld, new CANNON.Vec3(-10, 2, 0));
+    // Spawn Player Car — above start line, facing +X (track direction)
+    // Car's local +Z = forward, rotated PI/2 around Y makes local +Z point world +X
+    this.car = new Car(this.scene, this.physicsWorld, new CANNON.Vec3(0, 2, 0));
     this.car.chassisBody.quaternion.setFromEuler(0, Math.PI / 2, 0);
 
     // Initialize RaceManager first so AI can use it
@@ -150,12 +151,24 @@ class Game {
      const register = (id: string, action: (val: boolean) => void) => {
         const el = document.getElementById(id);
         if (!el) return;
-        const on  = (e: Event) => { e.preventDefault(); action(true);  el.classList.add('pressed'); };
-        const off = (e: Event) => { e.preventDefault(); action(false); el.classList.remove('pressed'); };
-        el.addEventListener('pointerdown',  on);
-        el.addEventListener('pointerup',    off);
-        el.addEventListener('pointerleave', off);
-        el.addEventListener('pointercancel',off);
+
+        // Use pointerId capture so multi-finger works independently
+        el.addEventListener('pointerdown', (e: PointerEvent) => {
+           e.preventDefault();
+           (e.target as Element).setPointerCapture(e.pointerId);
+           action(true);
+           el.classList.add('pressed');
+        });
+        el.addEventListener('pointerup', (e: PointerEvent) => {
+           e.preventDefault();
+           action(false);
+           el.classList.remove('pressed');
+        });
+        el.addEventListener('pointercancel', (e: PointerEvent) => {
+           e.preventDefault();
+           action(false);
+           el.classList.remove('pressed');
+        });
      };
 
      register('ctrl-left',  (v) => this.input.setLeft(v));
@@ -201,34 +214,35 @@ class Game {
   // createPlaceholderTrack removed, using Track.ts
 
   private updateCamera() {
-    // 3rd Person Camera Follow
     const carPos = this.car.visualBody.position;
     const carRot = this.car.visualBody.quaternion;
     const speed = Math.abs(this.car.vehicle.currentVehicleSpeedKmHour);
 
-    // Relative camera offset
-    const offset = new THREE.Vector3(0, 3.5, 12);
+    // Camera sits BEHIND the car: local -Z = behind when car faces +Z
+    const offset = new THREE.Vector3(0, 3.5, -12);
     offset.applyQuaternion(carRot);
     const targetCamPos = carPos.clone().add(offset);
 
-    // Smooth camera movement
+    // Smooth follow
     this.camera.position.lerp(targetCamPos, 0.1);
-    
-    // Dynamic FOV based on speed
-    const baseFOV = 60;
-    const maxFOV = 85;
+
+    // Dynamic FOV
+    const baseFOV = 65;
+    const maxFOV = 90;
     this.camera.fov = baseFOV + (speed / 350) * (maxFOV - baseFOV);
     this.camera.updateProjectionMatrix();
 
-    // Look ahead of car
-    const lookAhead = new THREE.Vector3(0, 0, -10).applyQuaternion(carRot);
+    // Look forward: local +Z = forward direction
+    const lookAhead = new THREE.Vector3(0, 0.5, 8).applyQuaternion(carRot);
     this.camera.lookAt(carPos.clone().add(lookAhead));
 
-    // Move directional light to cover car
+    // Keep directional light on the car
     const dirLight = (this as any).dirLight;
-    dirLight.position.copy(carPos).add(new THREE.Vector3(100, 100, 50));
-    dirLight.target.position.copy(carPos);
-    dirLight.target.updateMatrixWorld();
+    if (dirLight) {
+      dirLight.position.copy(carPos).add(new THREE.Vector3(100, 100, 50));
+      dirLight.target.position.copy(carPos);
+      dirLight.target.updateMatrixWorld();
+    }
   }
 
   private onWindowResize() {

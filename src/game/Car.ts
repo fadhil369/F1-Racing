@@ -28,9 +28,9 @@ export class Car {
 
     this.vehicle = new CANNON.RaycastVehicle({
       chassisBody: this.chassisBody,
-      indexRightAxis: 0, // x
-      indexUpAxis: 1, // y
-      indexForwardAxis: 2, // z
+      indexRightAxis: 0,   // +X = right
+      indexUpAxis: 1,      // +Y = up
+      indexForwardAxis: 2, // +Z = forward
     });
 
     const options = {
@@ -161,9 +161,9 @@ export class Car {
     this.vehicle.setSteeringValue(steeringValue, 0);
     this.vehicle.setSteeringValue(steeringValue, 1);
 
-    // Apply engine force to rear wheels (RWD)
-    this.vehicle.applyEngineForce(engineForce, 2);
-    this.vehicle.applyEngineForce(engineForce, 3);
+    // Apply engine force to rear wheels (RWD) — positive = forward
+    this.vehicle.applyEngineForce(-engineForce, 2);
+    this.vehicle.applyEngineForce(-engineForce, 3);
 
     // Braking
     if (input.brake) {
