@@ -216,13 +216,5 @@ export class Car {
         this.wheelMeshes[i].position.copy(transform.position as any);
         this.wheelMeshes[i].quaternion.copy(transform.quaternion as any);
     }
-    
-    // Update speedometer
-    const speedEl = document.getElementById('speedometer');
-    if (speedEl) {
-       // Using velocity directly for more reliability
-       const speedKmh = this.chassisBody.velocity.length() * 3.6;
-       speedEl.innerText = `${Math.floor(speedKmh)} km/h`;
-    }
   }
 }

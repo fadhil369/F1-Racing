@@ -120,7 +120,12 @@ class Game {
         this.renderer.domElement.focus();
 
         document.getElementById('start-menu')!.style.display = 'none';
-        document.getElementById('game-ui')!.style.display = 'flex';
+        
+        // Only show mobile controls if we are on a mobile device
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        if (isMobile) {
+            document.getElementById('mobile-controls')!.style.display = 'grid';
+        }
     });
 
     window.addEventListener('resize', this.onWindowResize.bind(this));

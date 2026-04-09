@@ -102,15 +102,7 @@ export class RaceManager {
     }
 
     private updateHUD() {
-        const playerPos = this.positions.find(p => p.isPlayer);
-        if (playerPos) {
-            const posEl = document.getElementById('pos-info');
-            const lapEl = document.getElementById('lap-info');
-            if (posEl) posEl.innerText = `Pos: ${playerPos.position}/${this.cars.length}`;
-            if (lapEl) lapEl.innerText = `Lap: ${playerPos.lap}/${this.lapCount}`;
-        }
-        
-        this.renderMinimap();
+        // HUD elements (pos-info, lap-info, minimap) have been removed for a minimalist experience.
     }
 
     private renderMinimap() {
