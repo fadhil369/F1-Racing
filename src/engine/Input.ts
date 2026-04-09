@@ -11,32 +11,39 @@ export class InputManager {
   }
 
   private handleKey(code: string, pressed: boolean, event?: KeyboardEvent) {
-    const gameKeys = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'KeyW', 'KeyA', 'KeyS', 'KeyD', 'Space'];
+    const gameCodes = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'KeyW', 'KeyA', 'KeyS', 'KeyD', 'Space'];
+    const gameKeys = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'w', 'a', 's', 'd', ' ', 'W', 'A', 'S', 'D'];
     
-    if (event && gameKeys.includes(code)) {
+    // Prevent default browser actions (like scrolling) for all game performance keys
+    if (event && (gameCodes.includes(code) || gameKeys.includes(event.key))) {
       event.preventDefault();
     }
 
-    switch (code) {
-      case 'ArrowUp':
-      case 'KeyW':
+    // Match by code (preferred for layout independence) or key (fallback)
+    const isW = code === 'KeyW' || (event && event.key === 'w') || (event && event.key === 'W');
+    const isS = code === 'KeyS' || (event && event.key === 's') || (event && event.key === 'S');
+    const isA = code === 'KeyA' || (event && event.key === 'a') || (event && event.key === 'A');
+    const isD = code === 'KeyD' || (event && event.key === 'd') || (event && event.key === 'D');
+    const isUp = code === 'ArrowUp' || (event && event.key === 'ArrowUp');
+    const isDown = code === 'ArrowDown' || (event && event.key === 'ArrowDown');
+    const isLeft = code === 'ArrowLeft' || (event && event.key === 'ArrowLeft');
+    const isRight = code === 'ArrowRight' || (event && event.key === 'ArrowRight');
+    const isSpace = code === 'Space' || (event && event.key === ' ');
+
+    if (isUp || isW) {
         this.forward = pressed;
-        break;
-      case 'ArrowDown':
-      case 'KeyS':
+    } else if (isDown || isS) {
         this.backward = pressed;
-        break;
-      case 'ArrowLeft':
-      case 'KeyA':
+    }
+
+    if (isLeft || isA) {
         this.left = pressed;
-        break;
-      case 'ArrowRight':
-      case 'KeyD':
+    } else if (isRight || isD) {
         this.right = pressed;
-        break;
-      case 'Space':
+    }
+
+    if (isSpace) {
         this.brake = pressed;
-        break;
     }
   }
 

@@ -47,9 +47,9 @@ export class SoundManager {
     this.gain.gain.setTargetAtTime(volume, this.audioContext.currentTime, 0.1);
   }
 
-  public resume() {
+  public async resume() {
     if (this.audioContext.state === 'suspended') {
-      this.audioContext.resume();
+      await this.audioContext.resume();
     }
   }
 }

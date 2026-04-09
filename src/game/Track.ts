@@ -70,12 +70,13 @@ export class Track {
     trackGeom.computeVertexNormals();
     
     const tLoader = new THREE.TextureLoader();
-    const asphaltTex = tLoader.load('/textures/asphalt.jpg', (tex) => {
+    const basePath = (import.meta as any).env.BASE_URL || './';
+    const asphaltTex = tLoader.load(`${basePath}textures/asphalt.jpg`, (tex) => {
         tex.wrapS = THREE.RepeatWrapping;
         tex.wrapT = THREE.RepeatWrapping;
         tex.repeat.set(5, 50);
     }, undefined, () => {
-        console.warn("Asphalt texture not found, using color fallback.");
+        console.warn("Asphalt texture not found at", `${basePath}textures/asphalt.jpg`);
     });
 
     const trackMat = new THREE.MeshStandardMaterial({ 
@@ -107,7 +108,8 @@ export class Track {
     const groundGeo = new THREE.PlaneGeometry(5000, 5000);
     const groundMat = new THREE.MeshStandardMaterial({ color: 0x1a331a, roughness: 1.0 });
     
-    tLoader.load('/textures/grass.jpg', (tex) => {
+    const basePath = (import.meta as any).env.BASE_URL || './';
+    tLoader.load(`${basePath}textures/grass.jpg`, (tex) => {
         tex.wrapS = THREE.RepeatWrapping;
         tex.wrapT = THREE.RepeatWrapping;
         tex.repeat.set(500, 500);
@@ -292,8 +294,9 @@ export class Track {
     const startLine = new THREE.Mesh(new THREE.PlaneGeometry(16, 2), new THREE.MeshStandardMaterial({ map: checkTex, transparent: true, opacity: 0.8 }));
     startLine.position.copy(startPos).add(new THREE.Vector3(0, 0.15, 0));
     startLine.rotation.x = -Math.PI / 2;
-    startLine.lookAt(startPos.clone().add(normal));
-    startLine.rotation.z = Math.PI / 2;
+    // Align with track direction
+    const angle = Math.atan2(tangent.x, tangent.z);
+    startLine.rotation.z = angle + Math.PI / 2;
     this.scene.add(startLine);
 
     // Optimized Gantry

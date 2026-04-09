@@ -1,42 +1,47 @@
 import * as THREE from 'three';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
-import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
-import { SMAAPass } from 'three/examples/jsm/postprocessing/SMAAPass.js';
 
 export class PostProcess {
-  private composer: EffectComposer;
-  private bloomPass: UnrealBloomPass;
+  private composer: EffectComposer | null = null;
+  private renderer: THREE.WebGLRenderer;
+  private scene: THREE.Scene;
+  private camera: THREE.PerspectiveCamera;
+  private useComposer = false;
 
   constructor(renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera) {
-    this.composer = new EffectComposer(renderer);
+    this.renderer = renderer;
+    this.scene = scene;
+    this.camera = camera;
+
+    // Only use EffectComposer on desktop — PostProcess effects crash on many mobile GPUs
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     
-    // 1. Render Pass
-    const renderPass = new RenderPass(scene, camera);
-    this.composer.addPass(renderPass);
-
-    // 2. Anti-aliasing (SMAA)
-    const smaaPass = new SMAAPass(); 
-    this.composer.addPass(smaaPass);
-
-    // 3. Bloom (For those glowing F1 lights and sun reflections)
-    this.bloomPass = new UnrealBloomPass(
-      new THREE.Vector2(window.innerWidth, window.innerHeight),
-      0.5, // strength
-      0.4, // radius
-      0.85 // threshold
-    );
-    this.composer.addPass(this.bloomPass);
-
-    // 4. Custom Speed Motion Blur (Simplified)
-    // We'll use a basic vignette/radial blur approach for speed sensation
+    if (!isMobile) {
+      try {
+        this.composer = new EffectComposer(renderer);
+        const renderPass = new RenderPass(scene, camera);
+        this.composer.addPass(renderPass);
+        this.useComposer = true;
+      } catch (e) {
+        console.warn('PostProcess init failed, falling back to direct render:', e);
+        this.useComposer = false;
+      }
+    }
   }
 
   public render() {
-    this.composer.render();
+    if (this.useComposer && this.composer) {
+      this.composer.render();
+    } else {
+      // Plain render — works on all devices
+      this.renderer.render(this.scene, this.camera);
+    }
   }
 
   public setSize(width: number, height: number) {
-    this.composer.setSize(width, height);
+    if (this.composer) {
+      this.composer.setSize(width, height);
+    }
   }
 }
