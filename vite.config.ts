@@ -2,7 +2,7 @@ import { defineConfig } from 'vite';
 import path from 'path';
 
 export default defineConfig({
-  base: './', // Use relative paths for GitHub Pages
+  base: '/F1-Racing/', // Match repository name
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
