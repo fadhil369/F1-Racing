@@ -14,7 +14,6 @@ export interface RacePosition {
 export class RaceManager {
     public cars: Car[];
     private track: Track;
-    private lapCount = 3;
     
     public carData: Map<Car, { lap: number, lastU: number, totalU: number, isPlayer: boolean }>;
     private positions: RacePosition[] = [];
@@ -103,55 +102,5 @@ export class RaceManager {
 
     private updateHUD() {
         // HUD elements (pos-info, lap-info, minimap) have been removed for a minimalist experience.
-    }
-
-    private renderMinimap() {
-        const canvas = document.getElementById('minimap') as HTMLCanvasElement;
-        if (!canvas) return;
-        
-        // Ensure buffer size matches display size
-        if (canvas.width !== canvas.clientWidth || canvas.height !== canvas.clientHeight) {
-            canvas.width = canvas.clientWidth;
-            canvas.height = canvas.clientHeight;
-        }
-
-        const ctx = canvas.getContext('2d');
-        if (!ctx) return;
-
-        // Clear
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        
-        // Draw Track (Using cached points)
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
-        ctx.lineWidth = 2;
-        ctx.lineJoin = 'round';
-        ctx.beginPath();
-        
-        const mapScale = 0.1; 
-        const centerX = canvas.width / 2 + 20; 
-        const centerY = canvas.height / 2 - 10;
-
-        if (this.minimapPoints.length > 0) {
-            this.minimapPoints.forEach((p, i) => {
-                const x = centerX + p.x * mapScale;
-                const y = centerY + p.z * mapScale;
-                if (i === 0) ctx.moveTo(x, y);
-                else ctx.lineTo(x, y);
-            });
-            ctx.closePath();
-            ctx.stroke();
-        }
-
-        // Draw Cars
-        this.positions.forEach(p => {
-            const pos = p.car.visualBody.position;
-            const x = centerX + pos.x * mapScale;
-            const y = centerY + pos.z * mapScale;
-            
-            ctx.fillStyle = p.isPlayer ? '#ff2800' : '#ffffff';
-            ctx.beginPath();
-            ctx.arc(x, y, p.isPlayer ? 4 : 2, 0, Math.PI * 2);
-            ctx.fill();
-        });
     }
 }
