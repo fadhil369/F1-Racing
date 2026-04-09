@@ -17,7 +17,6 @@ export class RaceManager {
     
     public carData: Map<Car, { lap: number, lastU: number, totalU: number, isPlayer: boolean }>;
     private positions: RacePosition[] = [];
-    private minimapPoints: THREE.Vector3[] = [];
 
     constructor(cars: Car[], track: Track, playerCar: Car) {
         this.cars = cars;
@@ -32,9 +31,6 @@ export class RaceManager {
                 isPlayer: car === playerCar
             });
         });
-
-        // Cache minimap points once (Using getPoints which is safer/faster for init)
-        this.minimapPoints = this.track.curve.getPoints(100);
     }
 
     public update() {
