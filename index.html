@@ -3,25 +3,240 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-    <title>Ultra F1 Racing | Console Fixed</title>
-    <script type="module" crossorigin src="/F1-Racing/assets/index-Cfsc8RSe.js"></script>
-    <link rel="stylesheet" crossorigin href="/F1-Racing/assets/index-jMHFV9bD.css">
+    <title>Ultra F1 Racing | Premium Experience</title>
+    <script type="module" crossorigin src="./assets/index-C3Na_Ysu.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-Gxv6rWn_.css">
   </head>
   <body>
-    <!-- Start Menu -->
-    <div id="start-menu">
-      <div class="menu-content">
-        <h1>Ultra F1 Racing</h1>
-        <p>Testing Phase: Debug Block Car</p>
-        <button id="start-button">START RACE</button>
+    <div class="vignette"></div>
+    <!-- AAA Selection HUD / Start Menu -->
+    <div id="start-menu" class="overlay">
+      
+      <!-- Top HUD Bar -->
+      <div class="hud-top-bar">
+        <div class="hud-stat-box level-box"><span class="icon">🎁</span> LEVEL 12</div>
+        <div class="hud-title-center">CAR SELECTION<br><span>CHOOSE YOUR F1 CAR</span></div>
+        <div class="hud-currency">
+          <div id="btn-fullscreen" class="hud-stat-box clickable"><span class="icon">⛶</span> FULLSCREEN</div>
+          <div class="hud-stat-box gold-box"><span class="icon">★</span> 200,000</div>
+          <div class="hud-stat-box gem-box"><span class="icon">💎</span> 45</div>
+        </div>
+      </div>
+
+      <!-- Car Selection Carousel -->
+      <div class="car-carousel">
+        <button id="prev-car" class="nav-arrow left">◀</button>
+        
+        <div class="preview-card-container left" id="preview-prev">
+          <div class="preview-label">PREV</div>
+          <div class="preview-car-name" id="prev-name">---</div>
+        </div>
+
+        <div class="central-space">
+          <!-- 3D Car rendered here in background -->
+        </div>
+
+        <div class="preview-card-container right" id="preview-next">
+          <div class="preview-label">NEXT</div>
+          <div class="preview-car-name" id="next-name">---</div>
+        </div>
+
+        <button id="next-car" class="nav-arrow right">▶</button>
+      </div>
+
+      <!-- Bottom Info Panel -->
+      <div class="hud-bottom-panel">
+        <div class="car-info-header">
+           <div class="car-name-title" id="active-car-name">SCUDERIA ROSSA</div>
+        </div>
+
+        <div class="stats-showcase">
+          <div class="stat-row-aaa">
+            <span class="label">SPEED</span>
+            <div class="star-rating" id="stat-speed">
+              <div class="star-fill"></div><div class="star-fill"></div><div class="star-fill"></div><div class="star"></div><div class="star"></div>
+            </div>
+          </div>
+          <div class="stat-row-aaa">
+            <span class="label">ACCELERATION</span>
+            <div class="star-rating" id="stat-accel">
+              <div class="star-fill"></div><div class="star-fill"></div><div class="star"></div><div class="star"></div><div class="star"></div>
+            </div>
+          </div>
+          <div class="stat-row-aaa">
+            <span class="label">HANDLING</span>
+            <div class="star-rating" id="stat-handling">
+              <div class="star-fill"></div><div class="star-fill"></div><div class="star-fill"></div><div class="star-fill"></div><div class="star"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="action-buttons">
+          <button id="btn-customize" class="btn-aaa secondary">CUSTOMIZE</button>
+          <button id="btn-tracks" class="btn-aaa secondary">TRACKS</button>
+          <button id="btn-select" class="btn-aaa primary">SELECT</button>
+          <button id="start-button" class="btn-aaa slanted">START RACE</button>
+        </div>
+      </div>
+
+      <!-- Track Selection Overlay -->
+      <div id="track-menu" class="overlay-sub hidden">
+        <div class="track-menu-inner">
+          <div class="track-menu-header">
+             <div class="track-header-title">CHOOSE CIRCUIT</div>
+             <button id="close-tracks" class="close-icon">×</button>
+          </div>
+          <div class="track-grid-aaa" id="track-list">
+             <!-- Tracks populated via JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Small overlay for Settings -->
+      <div class="settings-mini">
+         <div id="settings-trigger">⚙</div>
+      </div>
+
+      <!-- Settings Menu Overlay -->
+      <div id="settings-menu" class="overlay-sub hidden">
+        <div class="track-menu-inner">
+          <div class="track-menu-header">
+             <div class="track-header-title">GAME SETTINGS</div>
+             <button id="close-settings" class="close-icon">×</button>
+          </div>
+          
+          <div class="settings-content-aaa">
+            <div class="settings-group">
+              <label>AI DIFFICULTY</label>
+              <div class="slider-container">
+                <span class="range-min">ROOKIE</span>
+                <input type="range" id="diff-slider" min="0" max="2" step="1" value="1">
+                <span class="range-max">LEGEND</span>
+              </div>
+            </div>
+
+            <div class="settings-group">
+              <label>GRAPHICS QUALITY</label>
+              <div class="slider-container">
+                <span class="range-min">PERFORMANCE</span>
+                <input type="range" id="gfx-slider" min="0" max="2" step="1" value="1">
+                <span class="range-max">ULTRA</span>
+              </div>
+            </div>
+
+            <div class="settings-group">
+              <label>AUDIO VOLUME</label>
+              <div class="slider-container">
+                <span class="range-min">0%</span>
+                <input type="range" id="vol-slider" min="0" max="100" step="1" value="80">
+                <span class="range-max">100%</span>
+              </div>
+            </div>
+          </div>
+          
+          <button id="btn-save-settings" class="btn-aaa primary" style="margin-top: 20px; width: 100%;">SAVE & CLOSE</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Cinematic Transition Cover -->
+    <div id="transition-overlay" style="position: fixed; inset: 0; background: black; z-index: 20000; pointer-events: none; opacity: 0;"></div>
+
+    <!-- Top Mobile Bar -->
+    <div id="top-mobile-bar">
+      <button id="btn-force-landscape-top" class="btn-aaa mini grey">
+        <span class="icon">🔄</span> HORIZONTAL MODE
+      </button>
+    </div>
+
+    <!-- Countdown HUD -->
+    <div id="countdown-hud" style="display: none;">
+      <div id="countdown-val">3</div>
+    </div>
+
+    <!-- Orientation Overlay -->
+    <div id="orientation-overlay" class="overlay" style="display: none;">
+      <div class="rotate-icon">🔄</div>
+      <h2>PLEASE ROTATE DEVICE</h2>
+      <p>Landscape mode is required for the best racing experience.</p>
+      <div style="display: flex; gap: 10px; margin-top: 20px;">
+        <button id="btn-force-landscape-overlay" class="btn-aaa primary">FIX HORIZONTAL</button>
+        <button id="btn-mobile-fullscreen" class="btn-aaa secondary">FULLSCREEN</button>
       </div>
     </div>
 
-    <!-- Debug HUD -->
+    <!-- Race HUD -->
     <div id="debug-hud">
-       FPS: <span id="fps-val">0</span><br/>
-       POS: <span id="pos-val">0, 0, 0</span><br/>
-       INPUT: <span id="input-val">NONE</span>
+      <div id="race-hud">
+        <div class="hud-panel hud-tl">
+          <div class="hud-label">LAP</div>
+          <div class="hud-value"><span id="lap-val">1</span> <span class="hud-slash">/</span> <span id="total-laps">3</span></div>
+        </div>
+        <div class="hud-panel hud-tc">
+          <div class="hud-label">TIME</div>
+          <div class="hud-value" id="laptime-val">0:00.000</div>
+          <div class="hud-sublabel">BEST: <span id="bestlap-val">--:--.---</span></div>
+        </div>
+        <div class="hud-panel hud-tr">
+          <div class="hud-label" id="fps-label">FPS</div>
+          <div class="hud-value" id="fps-val">0</div>
+        </div>
+      </div>
+
+      <!-- Speed-o-meter -->
+      <div id="speedometer">
+        <svg viewBox="0 0 120 70" id="speed-arc-svg">
+          <path id="speed-track" d="M 10 65 A 55 55 0 0 1 110 65" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="8" stroke-linecap="round"/>
+          <path id="speed-fill"  d="M 10 65 A 55 55 0 0 1 110 65" fill="none" stroke="#ff2800" stroke-width="8" stroke-linecap="round" stroke-dasharray="173" stroke-dashoffset="173"/>
+        </svg>
+        <div id="speed-val">0</div>
+        <div id="speed-unit">KM/H</div>
+      </div>
+
+      <!-- Minimap -->
+      <div id="minimap-container">
+        <canvas id="minimap-canvas" width="200" height="200"></canvas>
+      </div>
+
+      <!-- Score panel -->
+      <div id="score-panel">
+        <div class="hud-label">SCORE</div>
+        <div class="hud-value" id="score-val">0</div>
+      </div>
+    </div>
+
+    <!-- Finish Menu -->
+    <div id="finish-menu" class="overlay" style="display: none;">
+      <div class="menu-content">
+        <h1 id="finish-title">RACE FINISHED</h1>
+        <div class="results-grid">
+          <div class="res-item">
+            <span class="res-label">RANK</span>
+            <span class="res-val" id="final-rank">--</span>
+          </div>
+          <div class="res-item">
+            <span class="res-label">TOTAL TIME</span>
+            <span class="res-val" id="final-time">--:--.---</span>
+          </div>
+          <div class="res-item">
+            <span class="res-label">BEST LAP</span>
+            <span class="res-val" id="final-best">--:--.---</span>
+          </div>
+          <div class="res-item">
+            <span class="res-label">GRAND SCORE</span>
+            <span class="res-val highlight" id="final-score">0</span>
+          </div>
+        </div>
+        <div id="leaderboard-list" class="leaderboard-list">
+          <!-- Populated dynamically via JS -->
+        </div>
+        <div class="finish-actions">
+          <button id="restart-button" class="btn-primary large">PLAY AGAIN</button>
+          <button id="home-button" class="btn-secondary large">MAIN MENU (CHANGE CARS/TRACKS)</button>
+        </div>
+      </div>
+    </div>
     </div>
 
     <!-- Mobile Touch Controls -->
