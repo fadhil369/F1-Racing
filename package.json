@@ -1,7 +1,8 @@
 {
-  "name": "website-game",
+  "name": "f1-racing-ultra",
+  "description": "AAA High-Performance F1 Racing Experience for Web & Mobile",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.1",
   "type": "module",
   "scripts": {
     "dev": "vite",

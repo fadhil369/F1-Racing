@@ -258,10 +258,10 @@ export class Game {
         // @ts-ignore
         if (screen.orientation && screen.orientation.lock) {
             // @ts-ignore
-            await screen.orientation.lock('landscape').catch(e => console.log("Orientation lock failed:", e));
+            await screen.orientation.lock('landscape').catch(() => {});
         }
     } catch (err) {
-        console.error("Landscape request failed:", err);
+      // Quiet fail
     }
   }
 
@@ -275,9 +275,7 @@ export class Game {
 
   private toggleFullscreen() {
     if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen().catch(err => {
-            console.error(`Error attempting to enable full-screen mode: ${err.message}`);
-        });
+        document.documentElement.requestFullscreen().catch(() => {});
     } else {
         if (document.exitFullscreen) {
             document.exitFullscreen();
