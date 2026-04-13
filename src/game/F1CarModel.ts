@@ -1,21 +1,23 @@
 import * as THREE from 'three';
 
-export function createF1CarModel(): THREE.Group {
+export function createF1CarModel(color: number = 0xe3000f): THREE.Group {
   const f1Group = new THREE.Group();
 
-  // Materials
+  // Materials for AAA Realism
   const paintMaterial = new THREE.MeshPhysicalMaterial({ 
-    color: 0xe3000f, // Ferrari Red
-    metalness: 0.6,
-    roughness: 0.2,
+    color: color, 
+    metalness: 0.8,
+    roughness: 0.1,
     clearcoat: 1.0,
-    clearcoatRoughness: 0.1
+    clearcoatRoughness: 0.05
   });
   
-  const blackCarbonMat = new THREE.MeshStandardMaterial({
+  const blackCarbonMat = new THREE.MeshPhysicalMaterial({
     color: 0x111111,
-    metalness: 0.8,
-    roughness: 0.5
+    metalness: 0.9,
+    roughness: 0.3,
+    clearcoat: 0.8,
+    clearcoatRoughness: 0.2
   });
 
   // Nose & Main Monocoque

@@ -2,7 +2,7 @@ import { defineConfig } from 'vite';
 import path from 'path';
 
 export default defineConfig({
-  base: '/F1-Racing/', // Match repository name
+  base: './', // Use relative path for portability
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
@@ -10,6 +10,6 @@ export default defineConfig({
   },
   server: {
     port: 3000,
-    open: false,
+    open: true, // Automatically open the browser
   },
 });

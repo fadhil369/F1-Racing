@@ -4,55 +4,80 @@ export class InputManager {
   public left = false;
   public right = false;
   public brake = false;
+  private readonly onKeyDownBound: (event: KeyboardEvent) => void;
+  private readonly onKeyUpBound: (event: KeyboardEvent) => void;
+  private readonly onBlurBound: () => void;
+  private readonly onVisibilityChangeBound: () => void;
 
   constructor() {
-    window.addEventListener('keydown', this.onKeyDown.bind(this));
-    window.addEventListener('keyup', this.onKeyUp.bind(this));
+    this.onKeyDownBound = (event: KeyboardEvent) => this.onKeyDown(event);
+    this.onKeyUpBound = (event: KeyboardEvent) => this.onKeyUp(event);
+    this.onBlurBound = () => this.resetState();
+    this.onVisibilityChangeBound = () => {
+      if (document.hidden) {
+        this.resetState();
+      }
+    };
+
+    // Capture phase ensures game input still works even when focus is on UI controls.
+    window.addEventListener('keydown', this.onKeyDownBound, { capture: true });
+    window.addEventListener('keyup', this.onKeyUpBound, { capture: true });
+    window.addEventListener('blur', this.onBlurBound);
+    document.addEventListener('visibilitychange', this.onVisibilityChangeBound);
   }
 
-  private handleKey(code: string, pressed: boolean, event?: KeyboardEvent) {
-    const gameCodes = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'KeyW', 'KeyA', 'KeyS', 'KeyD', 'Space'];
-    const gameKeys = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'w', 'a', 's', 'd', ' ', 'W', 'A', 'S', 'D'];
-    
-    // Prevent default browser actions (like scrolling) for all game performance keys
-    if (event && (gameCodes.includes(code) || gameKeys.includes(event.key))) {
+  private resetState() {
+    this.forward = false;
+    this.backward = false;
+    this.left = false;
+    this.right = false;
+    this.brake = false;
+  }
+
+  private handleKey(event: KeyboardEvent, pressed: boolean) {
+    const code = event.code ?? '';
+    const key = event.key ?? '';
+    const keyLower = key.length === 1 ? key.toLowerCase() : key;
+
+    // Match by code (preferred for layout independence) or key (fallback).
+    const isW = code === 'KeyW' || keyLower === 'w';
+    const isS = code === 'KeyS' || keyLower === 's';
+    const isA = code === 'KeyA' || keyLower === 'a';
+    const isD = code === 'KeyD' || keyLower === 'd';
+    const isUp = code === 'ArrowUp' || key === 'ArrowUp' || key === 'Up';
+    const isDown = code === 'ArrowDown' || key === 'ArrowDown' || key === 'Down';
+    const isLeft = code === 'ArrowLeft' || key === 'ArrowLeft' || key === 'Left';
+    const isRight = code === 'ArrowRight' || key === 'ArrowRight' || key === 'Right';
+    const isSpace = code === 'Space' || key === ' ' || key === 'Spacebar';
+    const isGameInput = isW || isS || isA || isD || isUp || isDown || isLeft || isRight || isSpace;
+
+    if (isGameInput) {
       event.preventDefault();
     }
 
-    // Match by code (preferred for layout independence) or key (fallback)
-    const isW = code === 'KeyW' || (event && event.key === 'w') || (event && event.key === 'W');
-    const isS = code === 'KeyS' || (event && event.key === 's') || (event && event.key === 'S');
-    const isA = code === 'KeyA' || (event && event.key === 'a') || (event && event.key === 'A');
-    const isD = code === 'KeyD' || (event && event.key === 'd') || (event && event.key === 'D');
-    const isUp = code === 'ArrowUp' || (event && event.key === 'ArrowUp');
-    const isDown = code === 'ArrowDown' || (event && event.key === 'ArrowDown');
-    const isLeft = code === 'ArrowLeft' || (event && event.key === 'ArrowLeft');
-    const isRight = code === 'ArrowRight' || (event && event.key === 'ArrowRight');
-    const isSpace = code === 'Space' || (event && event.key === ' ');
-
     if (isUp || isW) {
-        this.forward = pressed;
+      this.forward = pressed;
     } else if (isDown || isS) {
-        this.backward = pressed;
+      this.backward = pressed;
     }
 
     if (isLeft || isA) {
-        this.left = pressed;
+      this.left = pressed;
     } else if (isRight || isD) {
-        this.right = pressed;
+      this.right = pressed;
     }
 
     if (isSpace) {
-        this.brake = pressed;
+      this.brake = pressed;
     }
   }
 
   public onKeyDown(event: KeyboardEvent) {
-    this.handleKey(event.code, true, event);
+    this.handleKey(event, true);
   }
 
   public onKeyUp(event: KeyboardEvent) {
-    this.handleKey(event.code, false, event);
+    this.handleKey(event, false);
   }
 
   // Mobile API
